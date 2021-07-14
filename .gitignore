@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Lint files
+.eslintrc
+
+# package-lock file
+package-lock.json
