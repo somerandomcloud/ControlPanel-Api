@@ -60,6 +60,49 @@ const getUserData = async (id) => {
 	});
 };
 
+const editUserName = async (id, newName) => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/users/` + id;
+		options['method'] = 'PATCH';
+		options['data'] = { 'name': '' };
+		if (!name) return console.log('You need to define a name!');
+		axios(options).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const editUserCredits = async (id, newNumber) => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/users/` + id;
+		options['method'] = 'PATCH';
+		if (!newNumber) return console.log('You need to define a new balance number!');
+		if (isNaN(newNumber)) return console.log('That is not a number!');
+		options['data'] = { 'credits': newNumber };
+		axios(options).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const editUserRole = async (id, newRole) => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/users/` + id;
+		options['method'] = 'PATCH';
+		options['data'] = { 'role': newRole };
+		if (newRole == admin | mod | client | member) return console.log('You didnt define a valid role! Has to be one of these: \'admin\', \'mod\', \'client\', \'member\'');
+		axios(options).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
 /**
  * @description Delete a specific user
  * @param {id} UserID User ID
@@ -71,6 +114,42 @@ const deleteUser = async (id) => {
 		options['method'] = 'DELETE';
 		axios(options).then(res => {
 			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const addUserCredits = async (id, addXCredits) => {
+	return new Promise((resolve, reject) => {
+		getUserData(id).then(res => {
+			options['method'] = 'PATCH';
+			if (!newNumber) return console.log('You need to define a number to add to the existing balance!');
+			if (isNaN(newNumber)) return console.log('That is not a number!');
+			options['data'] = { 'credits': res.data.credits + newNumber };
+			axios(options).then(res => {
+				resolve(res);
+			}).catch(err => {
+				reject(err);
+			});
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const removeUserCredits = async (id, removeXCredits) => {
+	return new Promise((resolve, reject) => {
+		getUserData(id).then(res => {
+			options['method'] = 'PATCH';
+			if (!removeXCredits) return console.log('You need to define a number to remove from the existing balance!');
+			if (isNaN(removeXCredits)) return console.log('That is not a number!');
+			options['data'] = { 'credits': res.data.credits - removeXCredits };
+			axios(options).then(res => {
+				resolve(res);
+			}).catch(err => {
+				reject(err);
+			});
 		}).catch(err => {
 			reject(err);
 		});
@@ -154,4 +233,9 @@ module.exports = {
 	suspendServer,
 	unsuspendServer,
 	deleteServer,
+	editUserCredits,
+	editUserName,
+	editUserRole,
+	addUserCredits,
+	removeUserCredits,
 };
