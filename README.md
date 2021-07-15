@@ -43,7 +43,8 @@ url: The URI that leads to your panel.
 
 apiToken: The token you get from following `How to create an api token`
 
----
+## Users
+
 getUsers()
 
 Get all available users
@@ -113,7 +114,7 @@ Delete a user from the panel DB
 
 id: The ID of the user.
 
----
+## Servers
 
 listServers()
 
@@ -141,6 +142,34 @@ deleteServer(id)
 Deletes the specified server.
 
 id: The ID of the server
+
+## Vouchers
+
+listVouchers()
+
+Lists all available vouchers.
+
+---
+
+getVoucherData(id)
+
+Get a vouchers data
+
+id: The ID of the voucher
+
+---
+
+createVoucher(code, uses, credits, expires)
+
+Create a voucher with a specified code, how many uses it has, how many credits it redeems, and its expire date
+
+code: The code that needs to be used to use the voucher. Obligatory. (EX: SUMMER)
+
+uses: How many uses the voucher has. Obligatory. (EX: 10) (MAX: 2147483647)
+
+credits: How many credits the voucher has. Obligatory. (EX: 250) (MAX: 99999999)
+
+expires: The date the voucher expires. Can be null, aka never. (EX: 26-09-2023)
 
 ---
 
