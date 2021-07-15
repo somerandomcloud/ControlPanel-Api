@@ -23,6 +23,8 @@ const setOptions = async (url, apiToken) => {
 		url: url,
 		headers: {
 			'authorization': `Bearer ${apiToken}`,
+			'Content-Type': 'application/json',
+			'Accept': 'application/json',
 		},
 	};
 	console.log('Set new options!');
@@ -156,6 +158,8 @@ const removeUserCredits = async (id, removeXCredits) => {
 	});
 };
 
+// -------------------------------------------|
+
 /**
  * @description List servers
  */
@@ -222,6 +226,56 @@ const deleteServer = async (id) => {
 	});
 };
 
+// -------------------------------------------|
+
+const listVouchers = async () => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/vouchers`;
+		axios(options).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const getVoucherData = async (id) => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/vouchers/` + id;
+		axios(options).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const createVoucher = async (code, uses, credits, expires) => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/vouchers/`;
+		options['method'] = 'POST';
+		if(!code | !uses | !credits) return reject('You are missing one of the requirements! Are you sure you added the vouchers name, how many uses it has and how many credits it gives?');
+		if(!expires) expires = null;
+		options['data'] = { code: code, uses: uses, credits: credits, expires_at: expires };
+		axios(options).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const deleteVoucher = async (id) => {
+	return new Promise((resolve, reject) => {
+		options['url'] = `${options.url}api/vouchers/` + id;
+		options['method'] = 'DELETE';
+		axios(options).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
 
 module.exports = {
 	setOptions,
@@ -238,4 +292,8 @@ module.exports = {
 	editUserRole,
 	addUserCredits,
 	removeUserCredits,
+	getVoucherData,
+	listVouchers,
+	createVoucher,
+	deleteVoucher,
 };

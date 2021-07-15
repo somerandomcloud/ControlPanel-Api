@@ -4,10 +4,10 @@ ControlPanel-Api is an api wrapper for the custom billing software called Contro
 ![](https://img.shields.io/npm/l/controlpanel-api)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
-[![Support Server](https://img.shields.io/discord/591914197219016707.svg?color=7289da&label=ControlPanel&logo=discord&style=flat-square)](https://discord.gg/Qw69vNzFg6)
+[![Support Server](https://img.shields.io/discord/5 91914197219016707.svg?color=7289da&label=ControlPanel&logo=discord&style=flat-square)](https://discord.gg/Qw69vNzFg6)
 
 ## Installation
-Current release: 1.1.0
+Current release: 1.2.0
 
 `npm install controlpanel-api`
 ## Loading and configuring package
