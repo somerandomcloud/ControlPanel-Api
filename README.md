@@ -4,17 +4,18 @@ ControlPanel-Api is an api wrapper for the custom billing software called Contro
 ![](https://img.shields.io/npm/l/controlpanel-api)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
-[![Support Server](https://img.shields.io/discord/5 91914197219016707.svg?color=7289da&label=ControlPanel&logo=discord&style=flat-square)](https://discord.gg/Qw69vNzFg6)
+![npm](https://img.shields.io/npm/dt/controlpanel-api?style=for-the-badge)
 
 ## Installation
-Current release: 1.2.0
+Current release: 1.2.2
 
-`npm install controlpanel-api`
+`$ npm install controlpanel-api`
+`$ yarn add controlpanel-api`
 ## Loading and configuring package
 ```js
 const control = require('controlpanel-api');
 
-setOptions('http://127.0.0.1', 'jaiEBGZbIOlGfS-ExaMpLeQB5vgv7eQxFv6TWEPZ-Gw6BD3n');
+control.setOptions('http://127.0.0.1', 'jaiEBGZbIOlGfS-ExaMpLeQB5vgv7eQxFv6TWEPZ-Gw6BD3n');
 ```
 To configure the package, you need to add after importing the package the setOptions function to apply your settings. You need your panel domain and your api token.
 ### How to create an api token

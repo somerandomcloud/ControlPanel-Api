@@ -27,7 +27,6 @@ const setOptions = async (url, apiToken) => {
 			'Accept': 'application/json',
 		},
 	};
-	console.log('Set new options!');
 };
 
 /**
@@ -66,8 +65,8 @@ const editUserName = async (id, newName) => {
 	return new Promise((resolve, reject) => {
 		options['url'] = `${options.url}api/users/` + id;
 		options['method'] = 'PATCH';
-		options['data'] = { 'name': '' };
-		if (!name) return console.log('You need to define a name!');
+		options['data'] = { 'name': newName };
+		if (!newName) return console.log('You need to define a name!');
 		axios(options).then(res => {
 			resolve(res);
 		}).catch(err => {
