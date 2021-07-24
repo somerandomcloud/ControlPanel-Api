@@ -7,7 +7,7 @@ ControlPanel-Api is an api wrapper for the custom billing software called Contro
 ![npm](https://img.shields.io/npm/dt/controlpanel-api?style=for-the-badge)
 
 ## Installation
-Current release: 1.2.2
+Current release: 1.3.0
 
 `$ npm install controlpanel-api`
 `$ yarn add controlpanel-api`
@@ -178,6 +178,11 @@ expires: The date the voucher expires. Can be null, aka never. (EX: 26-09-2023)
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+## Contributers
+
+[ICodeInAssembly] (https://github.com/somerandomcloud)
+[DragonizedPizza] (https://github.com/Dragonizedpizza)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
