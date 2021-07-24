@@ -1,13 +1,15 @@
 # ControlPanel-Api
 ControlPanel-Api is an api wrapper for the custom billing software called ControlPanel. This wrapper makes it easier to interact with the API included with the software. 
 
+GitHub link: https://github.com/somerandomcloud/ControlPanel-Api
+
 ![](https://img.shields.io/npm/l/controlpanel-api)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 ![npm](https://img.shields.io/npm/dt/controlpanel-api?style=for-the-badge)
 
 ## Installation
-Current release: 1.3.0
+Current release: 1.3.1
 
 `$ npm install controlpanel-api`
 `$ yarn add controlpanel-api`
