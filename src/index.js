@@ -1,10 +1,17 @@
 const axios = require('axios');
-const validUrl = require('valid-url');
 let apiToken, url, options;
 
 function delLast(str) {
 	return str.splice(0, -1);
 }
+
+const checkUrl = (url) => {
+	return new Promise(async (resolve) => {
+		const res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+		resolve(res !== null);
+	});
+};
+
 /**
  * @description Sets the options for the api wrapper
  * @param {url} URL URL to the panel
@@ -13,8 +20,7 @@ function delLast(str) {
  */
 
 const setOptions = (URL, APIToken) => {
-
-	if (!validUrl.isUri(url)) throw new Error("Invalid URL isn't a valid URI. Example of valid URI: https://google.com | Invalid URI: google.com");
+	if (!checkUrl(url)) throw new Error("Invalid URL isn't a valid URI. Example of valid URI: https://google.com | Invalid URI: google.com");
 	apiToken = APIToken;
 	url = URL.endsWith("/") ? delLast(url) : url;
 
@@ -301,6 +307,7 @@ const deleteVoucher = (id) => {
 };
 
 module.exports = {
+	checkUrl,
 	setOptions,
 	getUsers,
 	getUserData,
@@ -320,3 +327,5 @@ module.exports = {
 	createVoucher,
 	deleteVoucher,
 };
+
+// Command to publish npm publish --access public
