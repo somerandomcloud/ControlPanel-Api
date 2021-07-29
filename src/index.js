@@ -21,9 +21,11 @@ const checkUrl = (url) => {
 const setOptions = async (url, apiToken) => {
 
 	if (!checkUrl(url)) return console.log('The provided url isnt a valid URI. Example of valid URI: https://google.com | Invalid URI: google.com');
-	if(!url.endsWith('/')) {
+	if(!String(url).endsWith('/')) {
 		url = `${url}/`;
 	}
+
+	if(!apiToken) return console.log('No api token specified!');
 
 	options = {
 		method: 'GET',
