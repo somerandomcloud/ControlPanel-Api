@@ -4,9 +4,9 @@ const url = null;
 
 const checkUrl = (url) => {
 	return new Promise(async (resolve) => {
-		/* eslint-disable */
+		/* eslint no-useless-escape: "off" */
 
-		const res = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g.test(url);
+		const res = String(url).match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
 		resolve(res !== null);
 	});
 };

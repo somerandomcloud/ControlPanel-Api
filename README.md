@@ -11,7 +11,7 @@ ATTENTION: Please update your package, as the contribution from DragonizedPizza 
 ![npm](https://img.shields.io/npm/dt/controlpanel-api?style=for-the-badge)
 
 ## Installation
-Current release: 1.4.0
+Current release: 1.4.1
 
 `$ npm install controlpanel-api`
 `$ yarn add controlpanel-api`
