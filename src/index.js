@@ -1,13 +1,12 @@
 const axios = require('axios');
-let apiToken, url, options;
-
-function delLast(str) {
-	return str.splice(0, -1);
-}
+const apiToken = null;
+const url = null;
 
 const checkUrl = (url) => {
 	return new Promise(async (resolve) => {
-		const res = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+		/* eslint-disable */
+
+		const res = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g.test(url);
 		resolve(res !== null);
 	});
 };
@@ -19,10 +18,12 @@ const checkUrl = (url) => {
  * @returns
  */
 
-const setOptions = (URL, APIToken) => {
-	if (!checkUrl(url)) throw new Error("Invalid URL isn't a valid URI. Example of valid URI: https://google.com | Invalid URI: google.com");
-	apiToken = APIToken;
-	url = URL.endsWith("/") ? delLast(url) : url;
+const setOptions = async (url, apiToken) => {
+
+	if (!checkUrl(url)) return console.log('The provided url isnt a valid URI. Example of valid URI: https://google.com | Invalid URI: google.com');
+	if(!url.endsWith('/')) {
+		url = `${url}/`;
+	}
 
 	options = {
 		method: 'GET',
@@ -36,278 +37,287 @@ const setOptions = (URL, APIToken) => {
 };
 
 /**
- * Returns user data.
- * @returns {Object}
+ * @description Returns user data
+ * @returns res.data
  */
-const getUsers = () => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/users`;
-		const data = await axios(opt).catch((e) => reject(e));
-		resolve(data.data);
+const getUsers = async () => {
+	return new Promise((resolve, reject) => {
+		const getUserOpt = { ...options };
+
+		getUserOpt['url'] = `${options.url}api/users`;
+		axios(getUserOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
 /**
- * Get a specified user's data.
- * @param {String | Number} id User ID.
- * @returns {Object}
- */
-
-const getUserData = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${opt.url}/api/users/${id}`;
-		const data = axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * Edit a user's name.
- * @param {String | Number} id The user's ID.
- * @param {String} newName The user's new name.
- * @returns 
- */
-
-const editUserName = (id, newName) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/users/${id}`;
-		opt.method = 'PATCH';
-		options.data = { 'name': newName };
-		if (!newName) reject('Invalid name provided.');
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * Edits a user's credits.
- * @param {String | Number} id The user's ID.
- * @param {String | Number} newNumber The user's new name.
- * @returns 
- */
-
-const editUserCredits = (id, newNumber) => {
-	return new Promise(async (resolve, reject) => {
-		options.url = `${options.url}/api/users/${id}`;
-		options.method = 'PATCH';
-		if (!newNumber) reject("Invalid number provided.");
-		if (isNaN(newNumber)) reject("Number provided ");
-		options['data'] = { 'credits': newNumber };
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * Edits a user's role.
- * @param {String | Number} id The user's ID.
- * @param {*} newRole The user's new role.
- * @returns 
- */
-
-const editUserRole = (id, newRole) => {
-	return new Promise(async (resolve, reject) => {
-		const validRoles = ["admin", "mod", "client", "member"];
-		if (!validRoles.includes(newRole)) reject(`Invalid role provided. Valid roles: ${validRoles.map(r => `'${r}'`).join(", ")}`);
-
-		const opt = options;
-		opt.url = `${options.url}api/users/` + id;
-		opt.method = 'PATCH';
-		opt.data = { 'role': newRole };
-		
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * Deletes a specific user.
- * @param {String | Number} id The user's ID.
- * @returns {Object}
- */
-
-const deleteUser = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/users/` + id;
-		opt.method = 'DELETE';
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * Add credits to a specific user.
- * @param {String | Number} id The user's ID.
- * @param {String | Number} addXCredits Amount of credits to be added.
- * @returns {Object}
- */
-
-const addUserCredits = (id, addXCredits) => {
-	return new Promise(async (resolve, reject) => {
-		const user = await getUserData(id).catch(e => reject(e));
-		const opt = options;	
-		opt.method = 'PATCH';
-
-	    if (!newNumber) return console.log('Invalid amount of credits to be added.');
-		if (isNaN(newNumber)) reject('Amount of credits to be added is not a number.');
-		
-		opt.data = { 'credits': user.data.credits + newNumber };
-		const data = await axios(opt).catch(r => reject(r));
-		resolve(data.data);
-	});
-};
-
-/**
- * Remove credits from a specific user.
- * @param {String | Number} id The user's ID.
- * @param {String | Number} removeXCredits Amount of credits to be removed.
- * @returns {Object}
- */
-
-const removeUserCredits = (id, removeXCredits) => {
-	return new Promise(async (resolve, reject) => {
-		const user = await getUserData(id).catch(e => reject(e));
-		const opt = options;
-		opt.method = 'PATCH';
-		
-		if (!removeXCredits) reject('Invalid amount to remove.');
-		if (isNaN(removeXCredits)) reject('Amount is not a number.');
-		
-		opt.data = { 'credits': user.data.credits - removeXCredits };
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * List all servers.
+ * @description Get a specified users data
+ * @param {id} UserID User ID
  * @returns
  */
 
-const listServers = () => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${opt.url}/api/servers`;
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+const getUserData = async (id) => {
+	return new Promise((resolve, reject) => {
+		const getUserDataOpt = { ...options };
+
+		getUserDataOpt['url'] = `${options.url}api/users/` + id;
+		axios(getUserDataOpt).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const editUserName = async (id, newName) => {
+	return new Promise((resolve, reject) => {
+		const editUsrNameOpt = { ...options };
+
+		editUsrNameOpt['url'] = `${options.url}api/users/` + id;
+		editUsrNameOpt['method'] = 'PATCH';
+		editUsrNameOpt['data'] = { 'name': newName };
+		if (!newName) return console.log('You need to define a name!');
+		axios(editUsrNameOpt).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const editUserCredits = async (id, newNumber) => {
+	return new Promise((resolve, reject) => {
+		const editUsrCredsOpt = { ...options };
+
+		editUsrCredsOpt['url'] = `${options.url}api/users/` + id;
+		editUsrCredsOpt['method'] = 'PATCH';
+		if (!newNumber) return console.log('You need to define a new balance number!');
+		if (isNaN(newNumber)) return console.log('That is not a number!');
+		editUsrCredsOpt['data'] = { 'credits': newNumber };
+		axios(editUsrCredsOpt).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const editUserRole = async (id, newRole) => {
+	return new Promise((resolve, reject) => {
+		const editUsrRoleOpt = { ...options };
+
+		editUsrRoleOpt['url'] = `${options.url}api/users/` + id;
+		editUsrRoleOpt['method'] = 'PATCH';
+		editUsrRoleOpt['data'] = { 'role': newRole };
+		if (newRole == admin | mod | client | member) return console.log('You didnt define a valid role! Has to be one of these: \'admin\', \'mod\', \'client\', \'member\'');
+		axios(editUsrRoleOpt).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
 /**
- * Get a specific server's data.
- * @param {String | Number} id The server's ID.
+ * @description Delete a specific user
+ * @param {id} UserID User ID
+ * @returns res
  */
+const deleteUser = async (id) => {
+	return new Promise((resolve, reject) => {
+		const delUsrOpt = { ...options };
 
-const getServerData = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/servers/${id}`;
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+		delUsrOpt['url'] = `${options.url}api/users/` + id;
+		delUsrOpt['method'] = 'DELETE';
+		axios(delUsrOpt).then(res => {
+			resolve(res);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
-/**
- * Suspend a server.
- * @param {String | Number} id The server's ID.
- * @returns 
- */
+const addUserCredits = async (id, addXCredits) => {
+	return new Promise((resolve, reject) => {
+		getUserData(id).then(res => {
+			const addUsrCredsOpt = { ...options };
 
-const suspendServer = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}api/servers/${id}/suspend`;
-		opt.method = 'PATCH';
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+			addUsrCredsOpt['method'] = 'PATCH';
+			if (!newNumber) return console.log('You need to define a number to add to the existing balance!');
+			if (isNaN(newNumber)) return console.log('That is not a number!');
+			addUsrCredsOpt['data'] = { 'credits': res.data.credits + newNumber };
+			axios(addUsrCredsOpt).then(res => {
+				resolve(res);
+			}).catch(err => {
+				reject(err);
+			});
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
-/**
- * Unsuspend a server.
- * @param {String | Number} id The server's ID.
- * @returns  
- */
+const removeUserCredits = async (id, removeXCredits) => {
+	return new Promise((resolve, reject) => {
+		getUserData(id).then(res => {
+			const removeUsrCredsOpt = { ...options };
 
-const unsuspendServer = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/servers/${id}/unsuspend`;
-		opt.method = 'PATCH';
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
-	});
-};
-
-/**
- * Delete a server.
- * @param {String | Number} id The server's ID.
- * @returns 
- */
-
-const deleteServer = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/servers/${id}`;
-		opt.method = 'DELETE';
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+			removeUsrCredsOpt['method'] = 'PATCH';
+			if (!removeXCredits) return console.log('You need to define a number to remove from the existing balance!');
+			if (isNaN(removeXCredits)) return console.log('That is not a number!');
+			removeUsrCredsOpt['data'] = { 'credits': res.data.credits - removeXCredits };
+			axios(removeUsrCredsOpt).then(res => {
+				resolve(res);
+			}).catch(err => {
+				reject(err);
+			});
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
 // -------------------------------------------|
 
 /**
- * Lists all vouchers.
- * @returns 
+ * @description List servers
  */
+const listServers = async () => {
+	return new Promise((resolve, reject) => {
+		const listServersOpt = { ...options };
 
-const listVouchers = () => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		options.url = `${opt.url}/api/vouchers`;
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+		listServersOpt['url'] = `${options.url}api/servers`;
+		axios(listServersOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
-const getVoucherData = (id) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${options.url}/api/vouchers/` + id;
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+/**
+ * @description Get a specific servers data
+ * @param {id} ServerID Server ID
+ */
+const getServerData = async (id) => {
+	return new Promise((resolve, reject) => {
+		const getSrvDataOpt = { ...options };
+
+		getSrvDataOpt['url'] = `${options.url}api/servers/` + id;
+		axios(getSrvDataOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
-const createVoucher = (code, uses, credits, expires) => {
-	return new Promise(async (resolve, reject) => {
-		const opt = options;
-		opt.url = `${opt.url}/api/vouchers/`;
-		opt.method = 'POST';
-		if(!code || !uses || !credits) return reject('You are missing one of the requirements! Are you sure you added the vouchers name, how many uses it has and how many credits it gives?');
+
+const suspendServer = async (id) => {
+	return new Promise((resolve, reject) => {
+		const suspendServerOpt = { ...options };
+
+		suspendServerOpt['url'] = `${options.url}api/servers/` + id + '/suspend';
+		suspendServerOpt['method'] = 'PATCH';
+		axios(suspendServerOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const unsuspendServer = async (id) => {
+	return new Promise((resolve, reject) => {
+		const unSusServerOpt = { ...options };
+
+		unSusServerOpt['url'] = `${options.url}api/servers/` + id + '/unsuspend';
+		unSusServerOpt['method'] = 'PATCH';
+		axios(unSusServerOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const deleteServer = async (id) => {
+	return new Promise((resolve, reject) => {
+		const delServerOpt = { ...options };
+
+		delServerOpt['url'] = `${options.url}api/servers/` + id;
+		delServerOpt['method'] = 'DELETE';
+		axios(delServerOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+// -------------------------------------------|
+
+const listVouchers = async () => {
+	return new Promise((resolve, reject) => {
+		const listVouchersOpt = { ...options };
+
+		listVouchersOpt['url'] = `${options.url}api/vouchers`;
+		axios(listVouchersOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const getVoucherData = async (id) => {
+	return new Promise((resolve, reject) => {
+		const getVoucherDataOpt = { ...options };
+
+		getVoucherDataOpt['url'] = `${options.url}api/vouchers/` + id;
+		axios(getVoucherDataOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+};
+
+const createVoucher = async (code, uses, credits, expires) => {
+	return new Promise((resolve, reject) => {
+		const createVoucherOpt = { ...options };
+
+		createVoucherOpt['url'] = `${options.url}api/vouchers/`;
+		createVoucherOpt['method'] = 'POST';
+		if(!code | !uses | !credits) return reject('You are missing one of the requirements! Are you sure you added the vouchers name, how many uses it has and how many credits it gives?');
 		if(!expires) expires = null;
-		opt.data = { code: code, uses: uses, credits: credits, expires_at: expires };
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+		createVoucherOpt['data'] = { code: code, uses: uses, credits: credits, expires_at: expires };
+		axios(createVoucherOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
-const deleteVoucher = (id) => {
-	return new Promise(async (resolve, reject) => {
-		opt.url = `${options.url}/api/vouchers/${id}`;
-		opt.method = 'DELETE';
-		const data = await axios(opt).catch(e => reject(e));
-		resolve(data.data);
+const deleteVoucher = async (id) => {
+	return new Promise((resolve, reject) => {
+		const deleteVoucherOpt = { ...options };
+
+		deleteVoucherOpt['url'] = `${options.url}api/vouchers/` + id;
+		deleteVoucherOpt['method'] = 'DELETE';
+		axios(deleteVoucherOpt).then(res => {
+			resolve(res.data);
+		}).catch(err => {
+			reject(err);
+		});
 	});
 };
 
 module.exports = {
-	checkUrl,
 	setOptions,
 	getUsers,
 	getUserData,
@@ -328,4 +338,4 @@ module.exports = {
 	deleteVoucher,
 };
 
-// Command to publish npm publish --access public
+// To publish: npm publish --access public
